@@ -32,6 +32,9 @@ def get_image(filename):
 @app.route("/uploads/<filename>")
 def get_upload(filename):
     return send_from_directory("uploads", filename)
+@app.route("/")
+def home():
+    return {"message": "CampusKart Backend Running"}
 
 
 # ---------------------------
