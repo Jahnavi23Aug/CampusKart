@@ -25,6 +25,8 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # Serve Images
 # ---------------------------
 IMAGE_FOLDER = "images"
+os.makedirs(IMAGE_FOLDER, exist_ok=True)
+
 @app.route("/images/<filename>")
 def get_image(filename):
     return send_from_directory(IMAGE_FOLDER, filename)
@@ -38,7 +40,7 @@ def get_upload(filename):
 # ---------------------------
 # MongoDB Connection
 # ---------------------------
-client = MongoClient("mongodb://localhost:27017/")
+client = MongoClient(os.environ.get("MONGO_URI"))
 db = client["CampusKartDB"]
 
 products_collection = db["products"]
@@ -580,11 +582,6 @@ def pay_principal():
 # ---------------------------
 # Run Server
 # ---------------------------
-if __name__ == "__main__":
-    socketio.run(app, debug=True)
-
-import os
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host="0.0.0.0", port=port)
