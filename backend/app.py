@@ -9,17 +9,15 @@ from datetime import datetime, timedelta
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+app.config["PORT"] = int(os.environ.get("PORT", 10000))
 CORS(app)
-
-
-
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 # ---------------------------
 # Upload Folder
 # ---------------------------
 UPLOAD_FOLDER = "uploads"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
 
 # ---------------------------
 # Serve Images
@@ -30,7 +28,6 @@ os.makedirs(IMAGE_FOLDER, exist_ok=True)
 @app.route("/images/<filename>")
 def get_image(filename):
     return send_from_directory(IMAGE_FOLDER, filename)
-socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route("/uploads/<filename>")
 def get_upload(filename):
