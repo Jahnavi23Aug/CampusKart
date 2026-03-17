@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()
 from flask import Flask, jsonify, request, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -40,7 +42,12 @@ def home():
 # ---------------------------
 # MongoDB Connection
 # ---------------------------
-client = MongoClient(os.environ.get("MONGO_URI"))
+MONGO_URI = os.environ.get("MONGO_URI")
+
+if not MONGO_URI:
+    raise Exception("MONGO_URI not set in environment variables")
+
+client = MongoClient(MONGO_URI)
 db = client["CampusKartDB"]
 
 products_collection = db["products"]
@@ -58,8 +65,6 @@ loans_collection = db["student_loans"]
 # ---------------------------
 def generate_products():
 
-    products_collection.delete_many({})
-
     products = []
 
     food_items = [
@@ -67,46 +72,12 @@ def generate_products():
         "Sandwich","Pasta","Coffee","Milkshake","Tea"
     ]
 
-    fashion_items = [
-        "Men T-Shirt","Jeans","Hoodie","Jacket","Dress",
-        "Skirt","Sneakers","Handbag","Cap","Sweater"
-    ]
-
-    beauty_items = [
-        "Lipstick","Face Wash","Moisturizer","Perfume",
-        "Foundation","Eye Liner","Face Cream","Hair Oil"
-    ]
-
-    jewellery_items = [
-        "Silver Ring","Gold Plated Chain","Bracelet",
-        "Earrings","Pendant","Anklet"
-    ]
-
-    pharmacy_items = [
-        "Paracetamol","Vitamin C Tablets","Cough Syrup",
-        "Pain Relief Spray","Hand Sanitizer","Bandage"
-    ]
-
-    book_items = [
-        "Data Structures Book","Operating Systems Book",
-        "DBMS Book","Python Programming Book",
-        "Java Programming Book","Machine Learning Book",
-        "Second-Hand Engineering Maths","Used Physics Book"
-    ]
-
     categories = {
-        "Food": food_items,
-        "Fashion": fashion_items,
-        "Beauty": beauty_items,
-        "Jewellery": jewellery_items,
-        "Pharmacy": pharmacy_items,
-        "Books": book_items
+        "Food": food_items
     }
 
     for category, items in categories.items():
-
         for item in items:
-
             product = {
                 "name": item,
                 "category": category,
@@ -115,15 +86,17 @@ def generate_products():
                 "image": f"/images/{item.lower().replace(' ','')}.jpg"
             }
 
-            products.append(product)
+            # ✅ only insert if not already exists
+            if not products_collection.find_one({"name": item}):
+                products_collection.insert_one(product)
 
-    products_collection.insert_many(products)
-
-    print("Products generated successfully!")
-
-generate_products()
+    print("Products added without deleting old ones!")
 
 
+@app.route("/generate-products")
+def generate_products_api():
+    generate_products()
+    return {"message": "Products added"}
 # ---------------------------
 # Student Signup with Document Upload
 # ---------------------------
