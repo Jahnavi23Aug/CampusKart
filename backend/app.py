@@ -13,7 +13,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 app.config["PORT"] = int(os.environ.get("PORT", 10000))
 CORS(app)
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
+socketio = SocketIO(app, cors_allowed_origins="*")
 # ---------------------------
 # Upload Folder
 # ---------------------------
