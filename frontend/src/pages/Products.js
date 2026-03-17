@@ -10,7 +10,7 @@ function Products({ addToCart }) {
   useEffect(() => {
 
     axios
-      .get("http://localhost:5000/products")
+      .get("https://campuskart-3.onrender.com/products")
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
@@ -112,10 +112,10 @@ function Products({ addToCart }) {
             >
 
               <img
-                src={`http://localhost:5000${product.image}`}
+                src={`https://campuskart-3.onrender.com${product.image}`}
                 alt={product.name}
                 onError={(e) => {
-                  e.target.src = "http://localhost:5000/images/default.jpg";
+                  e.target.src = "https://campuskart-3.onrender.com/images/default.jpg";
                 }}
                 style={{
                   width: "100%",
