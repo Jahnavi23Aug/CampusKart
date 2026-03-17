@@ -22,8 +22,10 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 # ---------------------------
 # Serve Images
 # ---------------------------
-IMAGE_FOLDER = "images"
-os.makedirs(IMAGE_FOLDER, exist_ok=True)
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+IMAGE_FOLDER = os.path.join(BASE_DIR, "images")
 
 @app.route("/images/<filename>")
 def get_image(filename):
@@ -31,7 +33,7 @@ def get_image(filename):
 
 @app.route("/uploads/<filename>")
 def get_upload(filename):
-    return send_from_directory("uploads", filename)
+    return send_from_directory(os.path.join(BASE_DIR, "uploads"), filename)
 @app.route("/")
 def home():
     return {"message": "CampusKart Backend Running"}
