@@ -20,9 +20,9 @@ function Signup(){
    formData.append("student_id",studentId);
 
    const res = await axios.post(
-     "http://localhost:5000/signup",
-     formData
-   );
+  "https://campuskart-3.onrender.com/signup",
+  formData
+);
 
    alert(res.data.message);
  };
