@@ -10,22 +10,26 @@ function Signup(){
  const [studentId,setStudentId] = useState(null);
 
  const register = async () => {
+  try {
+    const formData = new FormData();
 
-   const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("pan", pan);
+    formData.append("student_id", studentId);
 
-   formData.append("name",name);
-   formData.append("email",email);
-   formData.append("password",password);
-   formData.append("pan",pan);
-   formData.append("student_id",studentId);
+    const res = await axios.post(
+      "https://campuskart-3.onrender.com/signup",
+      formData
+    );
 
-   const res = await axios.post(
-  "https://campuskart-3.onrender.com/signup",
-  formData
-);
-
-   alert(res.data.message);
- };
+    alert(res.data.message);
+  } catch (err) {
+    console.error(err);
+    alert("Signup failed ❌");
+  }
+};
 
  return(
 
