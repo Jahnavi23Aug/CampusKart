@@ -223,9 +223,11 @@ def login():
 # ---------------------------
 @app.route("/products")
 def get_products():
-    products = list(products_collection.find({}, {"_id": 0}))
-    return jsonify(products)
-
+    try:
+        products = list(products_collection.find({}, {"_id": 0}))
+        return jsonify(products)
+    except Exception as e:
+        return {"error": str(e)}, 500
 
 # ---------------------------
 # Wallet API
