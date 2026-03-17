@@ -102,8 +102,8 @@ def generate_products_api():
 def signup():
 
     name = request.form.get("name")
-    email = request.form.get("email")
-    password = request.form.get("password")
+    email = request.form.get("email", "").strip().lower()
+    password = request.form.get("password", "").strip()
 
     pan_card = request.files.get("pan")
     student_id = request.files.get("student_id")
