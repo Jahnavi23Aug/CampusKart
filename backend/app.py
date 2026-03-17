@@ -162,24 +162,20 @@ def login():
 
     print("Request data:", data)
 
-    email = data.get("email", "").strip()
+    email = data.get("email", "").strip().lower()
     password = data.get("password", "").strip()
 
-    print("Email:", email)
-    print("Password:", password)
-
-    # find user by email
-    user = users_collection.find_one({"email": email})
+    # Case-insensitive email search
+    user = users_collection.find_one({
+        "email": {"$regex": f"^{email}$", "$options": "i"}
+    })
 
     print("User from DB:", user)
 
     if user:
 
-        if user["password"] != password:
+        if user["password"].strip() != password:
             return jsonify({"message": "Wrong password"}), 401
-
-        if not user.get("verified", False):
-            return jsonify({"message": "Account waiting for verification"}), 403
 
         return jsonify({
             "message": "Login successful",
