@@ -50,8 +50,6 @@ db = client["CampusKartDB"]
 
 products_collection = db["products"]
 orders_collection = db["orders"]
-group_orders_collection = db["group_orders"]
-
 users_collection = db["users"]
 books_collection = db["books"]
 vendors_collection = db["vendors"]
