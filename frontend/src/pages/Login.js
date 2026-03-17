@@ -7,29 +7,27 @@ function Login() {
   const [password,setPassword] = useState("");
 
   const handleLogin = async () => {
-
-    try {
-
-      const res = await axios.post("http://localhost:5000/login",{
+  try {
+    const res = await axios.post(
+      "https://campuskart-3.onrender.com/login",
+      {
         email,
         password
-      });
+      }
+    );
 
-      // Save user in localStorage
-      localStorage.setItem("user", JSON.stringify({
-        name: res.data.name,
-        wallet: res.data.wallet
-      }));
+    localStorage.setItem("user", JSON.stringify({
+      name: res.data.name,
+      wallet: res.data.wallet
+    }));
 
-      alert(res.data.message);
+    alert(res.data.message);
 
-    } catch(err) {
-
-      alert("Invalid login");
-
-    }
-
-  };
+  } catch (err) {
+    console.error(err); // 👈 ADD THIS
+    alert("Invalid login ❌");
+  }
+};
 
   return(
 
