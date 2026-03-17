@@ -1,6 +1,5 @@
 flask-socketio
 python-socketio
-eventlet
 blinker==1.9.0
 click==8.3.1
 colorama==0.4.6
